@@ -1,8 +1,3 @@
-/*
- * CS 551 Project "Memory manager".
- * This file needs to be turned in.	
- */
-
 #include "common.h"
 
 /*
@@ -14,25 +9,27 @@
  *          BITMAP_OP_NOT_FOUND (defined in "common.h") if the bit of interest does not exist in the bitmap
  *          BITMAP_OP_ERROR (defined in "common.h") on any other errors
  */
+
 int bitmap_find_first_bit(unsigned char * bitmap, int size, int val)
 {
-    if (bitmap == NULL || (val != 0 && val != 1)) {
-        return BITMAP_OP_ERROR;  // Validate inputs
+    // Validate inputs
+    if (!bitmap || (val != 0 && val != 1)) {
+        return BITMAP_OP_ERROR;
     }
 
-    int total_bits = size * BIT_PER_BYTE;  // Total number of bits
+    int total_bits = size * BIT_PER_BYTE;
 
     for (int i = 0; i < total_bits; i++) {
-        int byte_index = i / BIT_PER_BYTE;
-        int bit_index = i % BIT_PER_BYTE;
-        int bit = (bitmap[byte_index] >> bit_index) & 0x01;
-        
-        if (bit == val) {
+        int byte_place = i / BIT_PER_BYTE;
+        int bit_place = i % BIT_PER_BYTE;
+
+        // Check if the current bit matches the desired value
+        if (((bitmap[byte_place] >> bit_place) & 1) == val) {
             return i;
         }
     }
 
-    return BITMAP_OP_NOT_FOUND;  // Return if not found
+    return BITMAP_OP_NOT_FOUND;  // Bit not found
 }
 
 
@@ -44,16 +41,20 @@ int bitmap_find_first_bit(unsigned char * bitmap, int size, int val)
  * @return: BITMAP_OP_SUCCEED (defined in "common.h") on success
  *          BITMAP_OP_ERROR (defined in "common.h") on any errors
  */
+
+
 int bitmap_set_bit(unsigned char * bitmap, int size, int target_pos)
 {
-    if (bitmap == NULL || target_pos < 0 || target_pos >= size * BIT_PER_BYTE) {
+    // Validate inputs
+    if (!bitmap || target_pos < 0 || target_pos >= size * BIT_PER_BYTE) {
         return BITMAP_OP_ERROR;
     }
 
-    int byte_index = target_pos / BIT_PER_BYTE;
-    int bit_index = target_pos % BIT_PER_BYTE;
+    int byte_place = target_pos / BIT_PER_BYTE;
+    int bit_place = target_pos % BIT_PER_BYTE;
 
-    bitmap[byte_index] |= (1 << bit_index);  // Set the bit
+    // Set the specified bit
+    bitmap[byte_place] |= (1 << bit_place);
 
     return BITMAP_OP_SUCCEED;
 }
@@ -68,16 +69,19 @@ int bitmap_set_bit(unsigned char * bitmap, int size, int target_pos)
  *          BITMAP_OP_ERROR (defined in "common.h") on any errors
  */
 
+
 int bitmap_clear_bit(unsigned char * bitmap, int size, int target_pos)
 {
-    if (bitmap == NULL || target_pos < 0 || target_pos >= size * BIT_PER_BYTE) {
+    // Validate inputs
+    if (!bitmap || target_pos < 0 || target_pos >= size * BIT_PER_BYTE) {
         return BITMAP_OP_ERROR;
     }
 
-    int byte_index = target_pos / BIT_PER_BYTE;
-    int bit_index = target_pos % BIT_PER_BYTE;
+    int byte_place = target_pos / BIT_PER_BYTE;
+    int bit_place = target_pos % BIT_PER_BYTE;
 
-    bitmap[byte_index] &= ~(1 << bit_index);  // Clear the bit
+    // Clear the specified bit
+    bitmap[byte_place] &= ~(1 << bit_place);
 
     return BITMAP_OP_SUCCEED;
 }
@@ -94,16 +98,17 @@ int bitmap_clear_bit(unsigned char * bitmap, int size, int target_pos)
 
 int bitmap_bit_is_set(unsigned char * bitmap, int size, int pos)
 {
-    if (bitmap == NULL || pos < 0 || pos >= size * BIT_PER_BYTE) {
+    // Validate inputs
+    if (!bitmap || pos < 0 || pos >= size * BIT_PER_BYTE) {
         return BITMAP_OP_ERROR;
     }
 
-    int byte_index = pos / BIT_PER_BYTE;
-    int bit_index = pos % BIT_PER_BYTE;
+    // Calculate byte and bit positions
+    int byte_place = pos / BIT_PER_BYTE;
+    int bit_place = pos % BIT_PER_BYTE;
 
-    int bit = (bitmap[byte_index] >> bit_index) & 0x01;  // Extract the bit
-
-    return bit;
+    // Return the extracted bit
+    return (bitmap[byte_place] >> bit_place) & 1;
 }
 
 
@@ -113,12 +118,11 @@ int bitmap_bit_is_set(unsigned char * bitmap, int size, int pos)
  * @param size: size in bytes of the bit map
  * @return: BITMAP_OP_SUCCEED (defined in "common.h") on success
  *          BITMAP_OP_ERROR (defined in "common.h") on any errors
- * Do not change the implementation of this function.
  */
 int bitmap_print_bitmap(unsigned char * bitmap, int size)
 {
     int pos = 0;
-    int total_bits = size * BIT_PER_BYTE;
+    int tot_bits = size * BIT_PER_BYTE;
     unsigned char current_byte = 0;
 
     if (NULL == bitmap)
@@ -129,7 +133,7 @@ int bitmap_print_bitmap(unsigned char * bitmap, int size)
 
     printf("bitmap %p size %d bytes: ", bitmap, size);
 
-    while (pos < total_bits)
+    while (pos < tot_bits)
     {
         int v = 0;
         
