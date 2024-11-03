@@ -14,7 +14,7 @@ $ make
 $ gcc -Wall -Wextra -O2 test_main.c -L. -l:memory_manager.a -o test_memory_manager
 $ ./test_memory_manager
 ```
-NOTE -> IF YOU ENCOUNTER PERMISSION DENIED ERROR THEN GIVE BELOW COMMAND
+<em>NOTE -> IF YOU ENCOUNTER PERMISSION DENIED ERROR THEN GIVE BELOW COMMAND</em><br> 
 First come out to the base folder
 ```bash
 $ chmod u+w Custom_mem_manager
@@ -114,52 +114,61 @@ $ chmod u+w Custom_mem_manager
 
 ### Test Cases and Logs
 
-1. **Test Case 1**  
-   **Description:** Allocating 4, 5, 1, 2, 15, 6, 10, and 16 bytes to allocate each from 16 slot size.  
-   **Output:** 
+1. **Test Case 1** <br> 
+   **Description:** Allocating 4, 5, 1, 2, 15, 6, 10, and 16 bytes to allocate each from 16 slot size.<br>  
+   **Output:**<br>
+   ```bash
       ============== Memory snapshot ===============
       mem_list 0x55af96cd32a0 slot_size 16 batch_count 1 free_slot_bitmap 0x55af96cd32d0
       bitmap 0x55af96cd32d0 size 1 bytes: 0000  0000  
       mem_batch 0x55af96cd32f0 batch_mem 0x55af96cd3310
-      ============================================== 
+      ==============================================
+   ```
    **Status:** Working as expected.
 
-2. **Test Case 2**  
-   **Description:** Allocate 5 and 9 bytes; slot size <= 16 should allocate the next batch.  
-   **Output:** 
+3. **Test Case 2**<br> 
+   **Description:** Allocate 5 and 9 bytes; slot size <= 16 should allocate the next batch.<br>  
+   **Output:**<br>
+   ```bash 
       ============== Memory snapshot ===============
       mem_list 0x55af96cd32a0 slot_size 16 batch_count 2 free_slot_bitmap 0x55af96cd32d0
       bitmap 0x55af96cd32d0 size 2 bytes: 0000  0000  0111  1111  
       mem_batch 0x55af96cd37b0 batch_mem 0x55af96cd37d0
       mem_batch 0x55af96cd32f0 batch_mem 0x55af96cd3310
-      ============================================== 
+      ==============================================
+   ``` 
    **Status:** Working as expected.
 
-3. **Test Case 3**  
-   **Description:** Free first block from 16 slot size.  
-   **Output:** 
-      ============== Memory snapshot ===============
-      mem_list 0x55af96cd32a0 slot_size 16 batch_count 2 free_slot_bitmap 0x55af96cd32d0
-      bitmap 0x55af96cd32d0 size 2 bytes: 1000  0000  0000  1111  
-      mem_batch 0x55af96cd37b0 batch_mem 0x55af96cd37d0
-      mem_batch 0x55af96cd32f0 batch_mem 0x55af96cd3310
-      ==============================================  
-   **Status:** Working as expected.
-
-4. **Test Case 4**  
-   **Description:** Test double free.  
-   **Output:** 
+4. **Test Case 3**<br>  
+   **Description:** Free first block from 16 slot size.<br>  
+   **Output:**<br>
+   ```bash 
       ============== Memory snapshot ===============
       mem_list 0x55af96cd32a0 slot_size 16 batch_count 2 free_slot_bitmap 0x55af96cd32d0
       bitmap 0x55af96cd32d0 size 2 bytes: 1000  0000  0000  1111  
       mem_batch 0x55af96cd37b0 batch_mem 0x55af96cd37d0
       mem_batch 0x55af96cd32f0 batch_mem 0x55af96cd3310
       ==============================================
+   ```  
    **Status:** Working as expected.
 
-5. **Test Case 5**  
-   **Description:** Verify bitmap updates during memory allocation.  
-   **Output:** 
+5. **Test Case 4**<br>  
+   **Description:** Test double free.<br>  
+   **Output:**<br>
+   ```bash 
+      ============== Memory snapshot ===============
+      mem_list 0x55af96cd32a0 slot_size 16 batch_count 2 free_slot_bitmap 0x55af96cd32d0
+      bitmap 0x55af96cd32d0 size 2 bytes: 1000  0000  0000  1111  
+      mem_batch 0x55af96cd37b0 batch_mem 0x55af96cd37d0
+      mem_batch 0x55af96cd32f0 batch_mem 0x55af96cd3310
+      ==============================================
+   ```
+   **Status:** Working as expected.
+
+6. **Test Case 5**<br>  
+   **Description:** Verify bitmap updates during memory allocation.<br>  
+   **Output:**<br>
+   ```bash 
       Allocated 16 bytes at: 0x564f88605310
       Allocated 16 bytes at: 0x564f88605320
       Allocated 16 bytes at: 0x564f88605330
@@ -167,19 +176,23 @@ $ chmod u+w Custom_mem_manager
       Allocated 16 bytes at: 0x564f88605350
       Allocated 16 bytes at: 0x564f88605360
       Allocated 16 bytes at: 0x564f88605370
-      Allocated 16 bytes at: 0x564f88605380  
+      Allocated 16 bytes at: 0x564f88605380
+   ```  
    **Status:** Working as expected.
 
-6. **Test Case 6**  
-   **Description:** Handle allocation requests exceeding current batch capacity.  
-   **Output:** N
+7. **Test Case 6**<br>  
+   **Description:** Handle allocation requests exceeding current batch capacity.<br>  
+   **Output:**<br>
+   ```bash
       Allocated extra 16 bytes at (should be in a new batch): 0x564f886057d0
-      ERROR: Double free or invalid free detected.  
+      ERROR: Double free or invalid free detected.
+   ```  
    **Status:** Working as expected.
 
-7. **Test Case 7**  
-   **Description:** Validate free operation for expected and unexpected cases.  
-   **Output:** 
+8. **Test Case 7**<br>  
+   **Description:** Validate free operation for expected and unexpected cases.<br>  
+   **Output:**<br>
+   ```bash 
       Allocated 16 bytes at: 0x564f886057d0
       Freeing allocated block (expected case).
       Attempting double free (should produce an error).
@@ -187,10 +200,14 @@ $ chmod u+w Custom_mem_manager
       Attempting to free a non-block start address (should produce an error).
       ERROR: Pointer is not aligned with any slot start address.
       Attempting to free an out-of-range pointer (should produce an error).
-      ERROR: Pointer does not belong to any managed memory slot.  
+      ERROR: Pointer does not belong to any managed memory slot.
+   ```  
    **Status:** Working as expected.
 
-8. **Test Case 8**  
-   **Description:** Handle larger memory allocations with new batches.  
-   **Output:** Allocated 32 bytes at: 0x564f886058d0
+9. **Test Case 8**<br>  
+   **Description:** Handle larger memory allocations with new batches.<br>  
+   **Output:**<br>
+   ```bash
+   Allocated 32 bytes at: 0x564f886058d0
+   ```
    **Status:** Working as expected.
