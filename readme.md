@@ -2,7 +2,7 @@
 
 ---
 ### Status
-The code contains all necessarry functions and generates the expected output successfully.
+The code contains all necessarry functions as per the problem statement and generates the expected output successfully.
 
 ---
 ### How to Run the Code 
